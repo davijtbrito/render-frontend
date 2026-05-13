@@ -5,7 +5,8 @@
     <form (ngSubmit)="onSubmit()">
       <div class="form-group">
         <input
-          [(ngModel)]="inputValue"
+          [ngModel]="inputValue()"
+          (ngModelChange)="inputValue.set($event)"
           name="request-input"
           type="text"
           placeholder="Enter your request"
@@ -14,18 +15,27 @@
         />
       </div>
 
-      <button type="submit" class="submit-button" [disabled]="isLoading">
-        {{ isLoading ? 'Sending…' : 'Submit' }}
+      <button type="submit" class="submit-button" [disabled]="isLoading()">
+        {{ isLoading() ? 'Sending…' : 'Submit' }}
       </button>
     </form>
 
-    <div *ngIf="responseMessage" class="response-panel">
-      <h2>Response</h2>
-      <pre>{{ responseMessage }}</pre>
-    </div>
+    @if (errorMessage()) {
+      <div class="alert alert-error" role="alert">
+        <div class="alert-content">
+          <strong>Error:</strong> {{ errorMessage() }}
+        </div>
+        <button type="button" class="alert-close" (click)="clearError()" aria-label="Close alert">
+          ✕
+        </button>
+      </div>
+    }
 
-    <div *ngIf="errorMessage" class="error-panel">
-      <p>{{ errorMessage }}</p>
-    </div>
+    @if (responseMessage()) {
+      <div class="response-panel">
+        <h2>Response</h2>
+        <pre>{{ responseMessage() }}</pre>
+      </div>
+    }
   </div>
 </div>
