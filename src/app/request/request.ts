@@ -15,22 +15,20 @@ export class RequestPage {
   private readonly requestService = inject(RequestService);
   
   inputValue = signal('');
-  isLoading = signal(false);
-  responseMessage = signal('');
+  isLoading = signal(false);  
   errorMessage = signal('');
 
   clearError() {
     this.errorMessage.set('');
   }
 
-  async onSubmit() {
-    this.responseMessage.set('');
+  async onSubmit() {   
     this.errorMessage.set('');
     this.isLoading.set(true);
 
     try {
       const data = await this.requestService.submitRequest(this.inputValue());
-      this.responseMessage.set(JSON.stringify(data, null, 2));
+      alert('Request submitted successfully!');      
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Request failed';
       this.errorMessage.set(message);
