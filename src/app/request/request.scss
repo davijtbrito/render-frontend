@@ -71,6 +71,47 @@ form {
   &:active {
     transform: translateY(0);
   }
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+  }
+}
+
+.alert {
+  padding: 16px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  animation: slideIn 0.3s ease-out;
+
+  &.alert-error {
+    background-color: #fee;
+    border: 1px solid #f99;
+    color: #c00;
+  }
+
+  .alert-content {
+    flex: 1;
+    word-break: break-word;
+  }
+
+  .alert-close {
+    background: none;
+    border: none;
+    color: inherit;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 0 0 0 12px;
+    line-height: 1;
+
+    &:hover {
+      opacity: 0.7;
+    }
+  }
 }
 
 /* Mobile Layout */
@@ -108,5 +149,16 @@ form {
 
   h1 {
     font-size: 1.65rem;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

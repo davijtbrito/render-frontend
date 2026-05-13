@@ -1,43 +1,43 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
-import { firstValueFrom } from 'rxjs';
+import { RequestService } from './request.service';
 
 @Component({
   selector: 'app-request',
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './request.html',
-  styleUrls: ['./request.scss']
+  styleUrls: ['./request.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RequestPage {
-  private readonly http = inject(HttpClient);
-  inputValue = '';
-  isLoading = false;
-  responseMessage = '';
-  errorMessage = '';
+  private readonly requestService = inject(RequestService);
+  
+  inputValue = signal('');
+  isLoading = signal(false);
+  responseMessage = signal('');
+  errorMessage = signal('');
+
+  clearError() {
+    this.errorMessage.set('');
+  }
 
   async onSubmit() {
-    this.responseMessage = '';
-    this.errorMessage = '';
-    this.isLoading = true;
+    this.responseMessage.set('');
+    this.errorMessage.set('');
+    this.isLoading.set(true);
 
     try {
-      const url = 'https://render-backend-ibu1.onrender.com/api/render-entities';
-      const data = await firstValueFrom(
-        this.http.post<unknown>(url, { name: this.inputValue }, {
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        })
-      );
-
-      this.responseMessage = JSON.stringify(data, null, 2);
+      const data = await this.requestService.submitRequest(this.inputValue());
+      this.responseMessage.set(JSON.stringify(data, null, 2));
     } catch (error) {
-      this.errorMessage = error instanceof Error ? error.message : 'Request failed';
+      const message = error instanceof Error ? error.message : 'Request failed';
+      this.errorMessage.set(message);
+      // Auto-dismiss error after 5 seconds
+      setTimeout(() => this.errorMessage.set(''), 5000);
     } finally {
-      this.isLoading = false;
+      this.isLoading.set(false);
     }
   }
 }
