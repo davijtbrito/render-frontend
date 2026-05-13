@@ -44,11 +44,12 @@ export class RequestPage {
 
     try {
       const data = await this.requestService.submitRequest(this.inputValue());
-      this.responseMessage.set(JSON.stringify(data, null, 2));
+      this.responseMessage.set(`Request successful`);
       this.responseTimeoutId = setTimeout(() => {
         this.responseMessage.set('');
         this.responseTimeoutId = undefined;
       }, 2000);
+      
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Request failed';
       this.errorMessage.set(message);
