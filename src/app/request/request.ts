@@ -13,27 +13,49 @@ import { RequestService } from './request.service';
 })
 export class RequestPage {
   private readonly requestService = inject(RequestService);
+  private responseTimeoutId?: ReturnType<typeof setTimeout>;
+  private errorTimeoutId?: ReturnType<typeof setTimeout>;
   
   inputValue = signal('');
-  isLoading = signal(false);  
+  isLoading = signal(false);
+  responseMessage = signal('');
   errorMessage = signal('');
 
   clearError() {
+    if (this.errorTimeoutId) {
+      clearTimeout(this.errorTimeoutId);
+      this.errorTimeoutId = undefined;
+    }
     this.errorMessage.set('');
   }
 
+  clearResponse() {
+    if (this.responseTimeoutId) {
+      clearTimeout(this.responseTimeoutId);
+      this.responseTimeoutId = undefined;
+    }
+    this.responseMessage.set('');
+  }
+
   async onSubmit() {   
-    this.errorMessage.set('');
+    this.clearResponse();
+    this.clearError();
     this.isLoading.set(true);
 
     try {
       const data = await this.requestService.submitRequest(this.inputValue());
-      alert('Request submitted successfully!');      
+      this.responseMessage.set(JSON.stringify(data, null, 2));
+      this.responseTimeoutId = setTimeout(() => {
+        this.responseMessage.set('');
+        this.responseTimeoutId = undefined;
+      }, 2000);
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Request failed';
       this.errorMessage.set(message);
-      // Auto-dismiss error after 5 seconds
-      setTimeout(() => this.errorMessage.set(''), 5000);
+      this.errorTimeoutId = setTimeout(() => {
+        this.errorMessage.set('');
+        this.errorTimeoutId = undefined;
+      }, 5000);
     } finally {
       this.isLoading.set(false);
     }

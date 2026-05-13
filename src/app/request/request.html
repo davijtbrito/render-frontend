@@ -29,6 +29,18 @@
           ✕
         </button>
       </div>
+    }
+
+    @if (responseMessage()) {
+      <div class="alert alert-success" role="alert">
+        <div class="alert-content">
+          <strong>Success:</strong>
+          <pre>{{ responseMessage() }}</pre>
+        </div>
+        <button type="button" class="alert-close" (click)="clearResponse()" aria-label="Close alert">
+          ✕
+        </button>
+      </div>
     }    
   </div>
 </div>
