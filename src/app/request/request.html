@@ -1,0 +1,22 @@
+<div class="request-container">
+  <div class="request-card">
+    <h1>Request</h1>
+    
+    <form (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <input
+          [(ngModel)]="inputValue"
+          name="request-input"
+          type="text"
+          placeholder="Enter your request"
+          class="request-input"
+          required
+        />
+      </div>
+
+      <button type="submit" class="submit-button">
+        Submit
+      </button>
+    </form>
+  </div>
+</div>
