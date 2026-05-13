@@ -14,9 +14,18 @@
         />
       </div>
 
-      <button type="submit" class="submit-button">
-        Submit
+      <button type="submit" class="submit-button" [disabled]="isLoading">
+        {{ isLoading ? 'Sending…' : 'Submit' }}
       </button>
     </form>
+
+    <div *ngIf="responseMessage" class="response-panel">
+      <h2>Response</h2>
+      <pre>{{ responseMessage }}</pre>
+    </div>
+
+    <div *ngIf="errorMessage" class="error-panel">
+      <p>{{ errorMessage }}</p>
+    </div>
   </div>
 </div>
